@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const routes = require('./routes/index.js');
+const db = require('./config/connection.js');
 
 const PORT = process.env.PORT || 3001;
 
@@ -11,6 +12,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(routes);
 
-sequelize.sync({ force: false }).then(() => {
-  app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
+db.once('open', () => {
+  app.listen(PORT, () => {
+    console.log(`API server is running on ${PORT}`);
+  });
 });
