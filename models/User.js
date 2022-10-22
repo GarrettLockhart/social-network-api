@@ -53,5 +53,14 @@ const userSchema = new mongoose.Schema({
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       'Please fill a valid email address'
     ]
+  },
+  thoughts: [thoughtSchema],
+  friends: {
+    type: String,
+    default: this.ObjectId
   }
 });
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

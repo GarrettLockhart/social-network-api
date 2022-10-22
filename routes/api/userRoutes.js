@@ -1,20 +1,13 @@
 const router = require('express').Router();
+const {
+  getUsers,
+  getSingleUser,
+  createUser
+} = require('../../controllers/userController');
 
-router.get('/', (req, res) => {
-  res.json({ message: 'All users route' });
-});
+router.route('/').get(getUsers).post(createUser);
 
-router.get('/:userId', (req, res) => {
-  res.json({ message: 'Single user route' });
-});
-
-router.post('/', (req, res) => {
-  res.json({ message: 'New user created route' });
-});
-
-router.put('/:userId', (req, res) => {
-  res.json({ message: 'Update a user route' });
-});
+router.route('/:userId').get(getSingleUser);
 
 router.delete('/:userId', (req, res) => {
   res.json({ message: 'Delete a user route' });
