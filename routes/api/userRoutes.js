@@ -2,15 +2,16 @@ const router = require('express').Router();
 const {
   getUsers,
   getSingleUser,
-  createUser
+  createUser,
+  deleteUser
 } = require('../../controllers/userController');
+
+//api/users/
 
 router.route('/').get(getUsers).post(createUser);
 
-router.route('/:userId').get(getSingleUser);
+router.route('/').get(getSingleUser);
 
-router.delete('/:userId', (req, res) => {
-  res.json({ message: 'Delete a user route' });
-});
+router.route('/').delete(deleteUser);
 
 module.exports = router;

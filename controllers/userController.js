@@ -1,13 +1,19 @@
 const { User } = require('../models');
+// Bringing in ObjectId from mongodb npm so that we can pass it in the body and find a user by their id
+const ObjectId = require('mongodb').ObjectId;
 
 module.exports = {
+
+  // Returns all users with no constraints
   getUsers(req, res) {
     User.find()
       .then((users) => res.json(users))
       .catch((err) => res.status(500).json(err));
   },
+
+  // Finds a specific user by their GUID and returns only that user
   getSingleUser(req, res) {
-    User.findOne({ _id: req.params.userId })
+    User.findOne({ _id: ObjectId(req.body._id) })
       .select('-__v')
       .then((user) =>
         !user
@@ -16,9 +22,23 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
+
+  // Takes the username and email fields payloads and passes that through to the db, creates a new user
   createUser(req, res) {
     User.create(req.body)
       .then((dbUserData) => res.json(dbUserData))
       .catch((err) => res.status(500).json(err));
+  },
+
+  // Takes the ObjectId in the body and deletes it based on that
+  deleteUser(req, res) {
+    User.findOneAndDelete({ _id: ObjectId(req.body._id) }, (err, results) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json(err);
+      } else {
+        res.status(200).json(results);
+      }
+    });
   }
 };
