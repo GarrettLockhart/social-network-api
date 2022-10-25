@@ -3,11 +3,15 @@ const { Thought } = require('../models');
 const ObjectId = require('mongodb').ObjectId;
 
 module.exports = {
+
+  // Get all thoughts
   getThoughts(req, res) {
     Thought.find()
       .then((thoughts) => res.json(thoughts))
       .catch((err) => res.status(500).json(err));
   },
+
+  // Get a single thought using th body payload containing the objectid of the thought
   getSingleThought(req, res) {
     Thought.findOne({ _id: ObjectId(req.body._id) })
       .select('-__v')
@@ -18,6 +22,8 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
+
+  // create a new thought in the db
   createThought(req, res) {
     Thought.create(req.body)
       .then((dbThoughtData) => res.json(dbThoughtData))

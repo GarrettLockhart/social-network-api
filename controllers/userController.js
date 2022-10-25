@@ -2,13 +2,18 @@ const { User } = require('../models');
 // Bringing in ObjectId from mongodb npm so that we can pass it in the body and find a user by their id
 const ObjectId = require('mongodb').ObjectId;
 
-module.exports = {
+const handleError = (err) => console.error(err);
 
+module.exports = {
   // Returns all users with no constraints
   getUsers(req, res) {
     User.find()
-      .then((users) => res.json(users))
-      .catch((err) => res.status(500).json(err));
+      .populate({ path: 'thoughts.Thought'})
+      .populate({ path: 'friends.User' })
+      .exec(function (err, users) {
+        if (err) return handleError(err);
+        res.status(200).json(users);
+      });
   },
 
   // Finds a specific user by their GUID and returns only that user
