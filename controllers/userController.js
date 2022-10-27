@@ -8,18 +8,18 @@ module.exports = {
   // Returns all users with no constraints
   getUsers(req, res) {
     User.find({})
-        .populate({
-            path: 'friends',
-            select: '-__v'
-        })
-        .select('-__v')
-        .sort({ _id: -1 })
-        .then((dbUserData) => res.json(dbUserData))
-        .catch((err) => {
-            console.log(err);
-            res.status(400).json(err);
-        });
-},
+      .populate({
+        path: 'friends',
+        select: '-__v'
+      })
+      .select('-__v')
+      .sort({ _id: -1 })
+      .then((dbUserData) => res.json(dbUserData))
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json(err);
+      });
+  },
 
   // Finds a specific user by their GUID and returns only that user
   getSingleUser(req, res) {
@@ -48,6 +48,58 @@ module.exports = {
         res.status(500).json(err);
       } else {
         res.status(200).json(results);
+      }
+    });
+  },
+
+  // find user by id in the endpoint params and update their username
+  updateUser(req, res) {
+    const filter = { _id: ObjectId(req.params._id) };
+    const update = { username: req.body.username };
+
+    User.findOneAndUpdate(filter, update, (err, result) => {
+      if (result) {
+        res.status(200).json(result);
+        console.log(`Updated: ${result}`);
+      } else {
+        console.log('Uh Oh, something went wrong');
+        res.status(500).json({ message: 'something went wrong' });
+      }
+    });
+  },
+
+  // find target user by id in the endpoint params and add a friend using their id in the body
+  addFriend(req, res) {
+    const filter = { _id: ObjectId(req.params._id) };
+    const update = { $push: { friends: ObjectId(req.body.friends) } };
+
+    User.findOneAndUpdate(filter, update, (err, result) => {
+      if (result) {
+        res.status(200).json(result);
+        console.log(`Updated: ${result}`);
+      } else {
+        console.log('Uh Oh, something went wrong');
+        res.status(500).json({ message: 'something went wrong' });
+      }
+    });
+  },
+
+  // find target user for which we are updating their friends list, and pull that friend out of the friends array
+  updateFriends(req, res) {
+    const filter = { _id: ObjectId(req.params._id) };
+    const update = {
+      $pullAll: {
+        friends: [{ _id: req.body.friends }]
+      }
+    };
+
+    User.findOneAndUpdate(filter, update, (err, result) => {
+      if (result) {
+        res.status(200).json(result);
+        console.log(`Updated: ${result}`);
+      } else {
+        console.log(err);
+        res.status(500).json(err);
       }
     });
   }

@@ -39,5 +39,20 @@ module.exports = {
         res.status(200).json(results);
       }
     });
-  }
+  },
+
+  updateThought(req, res) {
+    const filter = { _id: ObjectId(req.params._id) };
+    const update = { thoughtText: req.body.thoughtText };
+    
+    Thought.findOneAndUpdate(filter, update,  (err, result) => {
+      if (result) {
+        res.status(200).json(result);
+        console.log(`Updated: ${result}`);
+      } else {
+        console.log('Uh Oh, something went wrong');
+        res.status(500).json({ message: 'something went wrong' });
+      }
+    });
+  },
 };
