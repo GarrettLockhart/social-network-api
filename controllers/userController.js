@@ -7,18 +7,23 @@ const handleError = (err) => console.error(err);
 module.exports = {
   // Returns all users with no constraints
   getUsers(req, res) {
-    User.find()
-      .populate({ path: 'thoughts.Thought'})
-      .populate({ path: 'friends.User' })
-      .exec(function (err, users) {
-        if (err) return handleError(err);
-        res.status(200).json(users);
-      });
-  },
+    User.find({})
+        .populate({
+            path: 'friends',
+            select: '-__v'
+        })
+        .select('-__v')
+        .sort({ _id: -1 })
+        .then((dbUserData) => res.json(dbUserData))
+        .catch((err) => {
+            console.log(err);
+            res.status(400).json(err);
+        });
+},
 
   // Finds a specific user by their GUID and returns only that user
   getSingleUser(req, res) {
-    User.findOne({ _id: ObjectId(req.body._id) })
+    User.findOne({ _id: ObjectId(req.params._id) })
       .select('-__v')
       .then((user) =>
         !user

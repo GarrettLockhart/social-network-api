@@ -10,7 +10,7 @@ const {
 
 router.route('/').get(getUsers).post(createUser);
 
-router.route('/oneUser').get(getSingleUser);
+router.route('/:_id').get(getSingleUser);
 
 router.route('/deleteUser').delete(deleteUser);
 

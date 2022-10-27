@@ -13,7 +13,7 @@ module.exports = {
 
   // Get a single thought using th body payload containing the objectid of the thought
   getSingleThought(req, res) {
-    Thought.findOne({ _id: ObjectId(req.body._id) })
+    Thought.findOne({ _id: ObjectId(req.params._id) })
       .select('-__v')
       .then((thought) =>
         !thought
