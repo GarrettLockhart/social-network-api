@@ -42,7 +42,7 @@ module.exports = {
 
   // Takes the ObjectId in the body and deletes it based on that
   deleteUser(req, res) {
-    User.findOneAndDelete({ _id: ObjectId(req.body._id) }, (err, results) => {
+    User.findOneAndDelete({ _id: ObjectId(req.params._id) }, (err, results) => {
       if (err) {
         console.log(err);
         res.status(500).json(err);

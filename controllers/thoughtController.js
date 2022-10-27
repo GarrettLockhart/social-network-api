@@ -28,5 +28,16 @@ module.exports = {
     Thought.create(req.body)
       .then((dbThoughtData) => res.json(dbThoughtData))
       .catch((err) => res.status(500).json(err));
+  },
+  // delete a thought by its id 
+  deleteThought(req, res) {
+    Thought.findOneAndDelete({ _id: ObjectId(req.params._id) }, (err, results) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json(err);
+      } else {
+        res.status(200).json(results);
+      }
+    });
   }
 };

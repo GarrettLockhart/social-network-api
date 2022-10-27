@@ -12,6 +12,6 @@ router.route('/').get(getUsers).post(createUser);
 
 router.route('/:_id').get(getSingleUser);
 
-router.route('/deleteUser').delete(deleteUser);
+router.route('/:_id').delete(deleteUser);
 
 module.exports = router;
